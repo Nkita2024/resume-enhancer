@@ -1,20 +1,24 @@
 import { NextResponse } from "next/server";
-import * as pdfParse from "pdf-parse";  // Import as namespace
+import * as pdfParse from "pdf-parse";
 
 export async function POST(req: Request) {
-  const formData = await req.formData();
-  const file = formData.get("file") as File;
+  try {
+    const formData = await req.formData();
+    const file = formData.get("file") as File;
 
-  if (!file) {
-    return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+    if (!file) {
+      return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+    }
+
+    // Convert uploaded file to buffer
+    const buffer = Buffer.from(await file.arrayBuffer());
+
+    // Extract text using pdf-parse
+    const data = await (pdfParse as any)(buffer);
+
+    return NextResponse.json({ text: data.text });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
-
-  // Convert uploaded file to buffer
-  const buffer = Buffer.from(await file.arrayBuffer());
-
-  // pdfParse is a function inside the namespace
-  const data = await (pdfParse as any)(buffer);
-
-  return NextResponse.json({ text: data.text });
 }
 
