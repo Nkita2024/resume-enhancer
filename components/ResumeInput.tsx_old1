@@ -34,24 +34,23 @@ export default function ResumeInput({ onTextSubmit }: { onTextSubmit: (text: str
       }
 
       const data = await res.json();
-      // ✅ Pass extracted text to parent
-      onTextSubmit(data.text);
+      console.log("Extracted text from PDF:", data.text);
+      onTextSubmit(data.text); // Pass extracted text to parent
     }
   };
 
   return (
-    <div className="space-y-4">
+    <div>
       <textarea
-        className="w-full border p-2 rounded"
-        rows={8}
+        placeholder="Paste your resume here…"
+        className="border p-2 w-full mb-4"
         value={resumeText}
         onChange={(e) => setResumeText(e.target.value)}
-        placeholder="Paste your resume text here..."
       />
-      <input type="file" accept="application/pdf" onChange={handleFileChange} />
+      <input type="file" onChange={handleFileChange} />
       <button
-        className="bg-blue-600 text-white px-4 py-2 rounded"
         onClick={handleSubmit}
+        className="bg-blue-600 text-white px-4 py-2 mt-2 rounded"
       >
         Enhance Resume
       </button>
