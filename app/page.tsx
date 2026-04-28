@@ -34,7 +34,7 @@ export default function Home() {
       <h1 className="text-3xl font-bold mb-4">AI Resume Enhancer</h1>
       {/* ✅ Pass the callback into ResumeInput */}
       <ResumeInput onTextSubmit={handleTextSubmit} />
-      {suggestions && <Suggestions suggestions={suggestions} />}
+      {suggestions && <Suggestions feedback={suggestions} />}
     </main>
   );
 }
