@@ -8,6 +8,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No resume text provided" }, { status: 400 });
     }
 
+    console.log("HF_API_KEY exists:", !!process.env.HF_API_KEY);
+
     const response = await fetch("https://api-inference.huggingface.co/models/gpt2", {
       method: "POST",
       headers: {
