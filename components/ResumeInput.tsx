@@ -35,7 +35,7 @@ export default function ResumeInput({ onTextSubmit }: { onTextSubmit: (text: str
 
       const data = await res.json();
       if (data.text) {
-        onTextSubmit(data.text);   // ✅ this is the critical call
+        onTextSubmit(data.text);   // ✅ critical call
       } else {
         alert("No text extracted from file");
       }

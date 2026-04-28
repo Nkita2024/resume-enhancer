@@ -8,14 +8,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No resume text provided" }, { status: 400 });
     }
 
-    const response = await fetch("https://api-inference.huggingface.co/models/facebook/bart-large-cnn", {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.HF_API_KEY}`,
+        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        inputs: `Summarize and improve this resume for clarity, impact, and ATS-friendliness:\n\n${resume}`,
+        model: "llama-3.1-8b-instant",
+        messages: [
+          {
+            role: "system",
+            content: "You are a professional resume coach. Provide clear, actionable suggestions to improve language, structure, impact, and ATS-friendliness."
+          },
+          {
+            role: "user",
+            content: resume
+          }
+        ],
       }),
     });
 
@@ -25,7 +35,7 @@ export async function POST(req: Request) {
     }
 
     const data = await response.json();
-    const suggestions = data[0]?.summary_text || JSON.stringify(data);
+    const suggestions = data.choices?.[0]?.message?.content || "No suggestions returned";
 
     return NextResponse.json({ suggestions });
   } catch (err: any) {
