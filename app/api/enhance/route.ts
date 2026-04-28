@@ -8,13 +8,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No resume text provided" }, { status: 400 });
     }
 
-    // Debugging: confirm env var is injected
-    console.log("HF_API_KEY exists:", !!process.env.HF_API_KEY);
+   
 
-    const response = await fetch("https://api-inference.huggingface.co/models/bigscience/bloomz-560m", {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.HF_API_KEY}`, // must be set in Vercel env vars
+        Authorization: `Bearer ${process.env.GROQ_API_KEY}`, // must be set in Vercel env vars
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
