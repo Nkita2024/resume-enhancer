@@ -12,13 +12,13 @@ export default function ResumeInput({ onTextSubmit }: { onTextSubmit: (text: str
   };
 
   const handleSubmit = async () => {
-    // Case 1: If user pasted text
+    // Case 1: pasted text
     if (resumeText.trim()) {
       onTextSubmit(resumeText);
       return;
     }
 
-    // Case 2: If user uploaded a file
+    // Case 2: uploaded file
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
@@ -34,8 +34,11 @@ export default function ResumeInput({ onTextSubmit }: { onTextSubmit: (text: str
       }
 
       const data = await res.json();
-      // ✅ Pass extracted text to parent
-      onTextSubmit(data.text);
+      if (data.text) {
+        onTextSubmit(data.text);   // ✅ this is the critical call
+      } else {
+        alert("No text extracted from file");
+      }
     }
   };
 
