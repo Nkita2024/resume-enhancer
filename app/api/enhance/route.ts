@@ -8,34 +8,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No resume text provided" }, { status: 400 });
     }
 
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const response = await fetch("https://api-inference.huggingface.co/models/facebook/bart-large-cnn", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+        Authorization: `Bearer ${process.env.HF_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "llama-3.1-8b-instant", 
-        messages: [
-          {
-            role: "system",
-            content: `You are a professional resume coach. 
-Return feedback in strict JSON format with this schema:
-{
-  "summary": { "strengths": [], "suggestions": [] },
-  "experience": { "strengths": [], "suggestions": [] },
-  "skills": { "strengths": [], "suggestions": [] },
-  "formatting": { "strengths": [], "suggestions": [] },
-  "ats_friendly": { "strengths": [], "suggestions": [] },
-  "ats_match": { "score": 0, "rating": "" }
-}
-Do not include any text outside of JSON.`
-          },
-          {
-            role: "user",
-            content: resume
-          }
-        ],
+        inputs: `Summarize and improve this resume for clarity, impact, and ATS-friendliness:\n\n${resume}`,
       }),
     });
 
@@ -45,7 +25,7 @@ Do not include any text outside of JSON.`
     }
 
     const data = await response.json();
-    const suggestions = data.choices?.[0]?.message?.content || "No suggestions generated.";
+    const suggestions = data[0]?.summary_text || JSON.stringify(data);
 
     return NextResponse.json({ suggestions });
   } catch (err: any) {
