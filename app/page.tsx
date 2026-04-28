@@ -1,3 +1,8 @@
+"use client";
+import { useState } from "react";   // <-- missing import
+import ResumeInput from "../components/ResumeInput";
+import Suggestions from "../components/Suggestions";
+
 export default function Home() {
   const [suggestions, setSuggestions] = useState("");
 
