@@ -19,7 +19,17 @@ export async function POST(req: Request) {
         messages: [
           {
             role: "system",
-            content: "You are a professional resume coach. Provide actionable suggestions to improve language, structure, impact, and ATS-friendliness. Organize feedback into sections: Summary, Experience, Skills, Formatting."
+            content: `You are a professional resume coach. 
+Return feedback in strict JSON format with this schema:
+{
+  "summary": { "strengths": [], "suggestions": [] },
+  "experience": { "strengths": [], "suggestions": [] },
+  "skills": { "strengths": [], "suggestions": [] },
+  "formatting": { "strengths": [], "suggestions": [] },
+  "ats_friendly": { "strengths": [], "suggestions": [] },
+  "ats_match": { "score": 0, "rating": "" }
+}
+Do not include any text outside of JSON.`
           },
           {
             role: "user",
