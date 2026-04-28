@@ -8,19 +8,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No resume text provided" }, { status: 400 });
     }
 
-   
-
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`, // must be set in Vercel env vars
+        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        inputs: `You are a professional resume coach.
-        Analyze the following resume and provide actionable suggestions
-        to improve language, structure, impact, and ATS-friendliness.
-        Organize feedback into sections: Summary, Experience, Skills, Formatting.\n\n${resume}`,
+        model: "llama3-8b-8192", // Groq’s fast LLaMA‑3 model
+        messages: [
+          {
+            role: "system",
+            content: "You are a professional resume coach. Provide actionable suggestions to improve language, structure, impact, and ATS-friendliness. Organize feedback into sections: Summary, Experience, Skills, Formatting."
+          },
+          {
+            role: "user",
+            content: resume
+          }
+        ],
       }),
     });
 
@@ -30,12 +35,7 @@ export async function POST(req: Request) {
     }
 
     const data = await response.json();
-
-    // Hugging Face returns an array of generated_text objects for text models
-    const suggestions =
-      Array.isArray(data) && data[0]?.generated_text
-        ? data[0].generated_text
-        : JSON.stringify(data);
+    const suggestions = data.choices?.[0]?.message?.content || "No suggestions generated.";
 
     return NextResponse.json({ suggestions });
   } catch (err: any) {
