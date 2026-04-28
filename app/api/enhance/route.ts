@@ -8,9 +8,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No resume text provided" }, { status: 400 });
     }
 
+    // Debugging: confirm env var is injected
     console.log("HF_API_KEY exists:", !!process.env.HF_API_KEY);
 
-    const response = await fetch("https://api-inference.huggingface.co/models/gpt2", {
+    const response = await fetch("https://api-inference.huggingface.co/models/google/flan-t5-base", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.HF_API_KEY}`, // must be set in Vercel env vars
@@ -30,7 +31,12 @@ export async function POST(req: Request) {
     }
 
     const data = await response.json();
-    const suggestions = data[0]?.generated_text || "No suggestions generated.";
+
+    // Hugging Face returns an array of generated_text objects for text models
+    const suggestions =
+      Array.isArray(data) && data[0]?.generated_text
+        ? data[0].generated_text
+        : JSON.stringify(data);
 
     return NextResponse.json({ suggestions });
   } catch (err: any) {
