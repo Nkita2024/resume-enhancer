@@ -1,39 +1,46 @@
 "use client";
-import { useState } from "react";   // <-- missing import
+
+import React, { useState } from "react";
 import ResumeInput from "../components/ResumeInput";
 import Suggestions from "../components/Suggestions";
 
-export default function Home() {
-  const [suggestions, setSuggestions] = useState("");
+// Import the ResumeFeedback type from Suggestions.tsx
+import type { ResumeFeedback } from "../components/Suggestions";
+
+export default function HomePage() {
+  const [suggestions, setSuggestions] = useState<ResumeFeedback | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleTextSubmit = async (resumeText: string) => {
+    setLoading(true);
     try {
-      const res = await fetch("/api/enhance", {
+      const response = await fetch("/api/enhance", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ resume: resumeText }),
       });
 
-      if (!res.ok) {
-        const errText = await res.text();
-        console.error("Enhance API error:", errText);
-        setSuggestions("Error enhancing resume: " + errText);
-        return;
-      }
-
-      const data = await res.json();
+      const data = await response.json();
+      // ✅ data.suggestions should match ResumeFeedback schema
       setSuggestions(data.suggestions);
-    } catch (err: any) {
-      console.error("Unexpected error:", err);
-      setSuggestions("Unexpected error: " + err.message);
+    } catch (err) {
+      console.error("Error enhancing resume:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <main className="p-6">
       <h1 className="text-3xl font-bold mb-4">AI Resume Enhancer</h1>
-      {/* ✅ Pass the callback into ResumeInput */}
+
+      {/* Resume input box */}
       <ResumeInput onTextSubmit={handleTextSubmit} />
+
+      {/* Show loading state */}
+      {loading && <p className="mt-4 text-gray-600">Enhancing resume...</p>}
+
+      {/* Show suggestions if available */}
       {suggestions && <Suggestions feedback={suggestions} />}
     </main>
   );

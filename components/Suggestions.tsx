@@ -8,7 +8,7 @@ interface SectionFeedback {
   suggestions: string[];
 }
 
-interface ResumeFeedback {
+export interface ResumeFeedback {
   summary: SectionFeedback;
   experience: SectionFeedback;
   skills: SectionFeedback;
