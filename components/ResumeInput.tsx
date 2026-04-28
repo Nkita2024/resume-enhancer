@@ -34,6 +34,7 @@ export default function ResumeInput({ onTextSubmit }: { onTextSubmit: (text: str
       }
 
       const data = await res.json();
+      console.log("Extracted text from PDF:", data.text);
       onTextSubmit(data.text); // Pass extracted text to parent
     }
   };

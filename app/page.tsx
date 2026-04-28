@@ -1,15 +1,8 @@
-"use client";
-import { useState } from "react";
-import ResumeInput from "../components/ResumeInput";
-import Suggestions from "../components/Suggestions";
-
 export default function Home() {
   const [suggestions, setSuggestions] = useState("");
 
-  // This function receives text from ResumeInput (after PDF parsing)
   const handleTextSubmit = async (resumeText: string) => {
     try {
-      // Call enhance API with extracted text
       const res = await fetch("/api/enhance", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -34,7 +27,7 @@ export default function Home() {
   return (
     <main className="p-6">
       <h1 className="text-3xl font-bold mb-4">AI Resume Enhancer</h1>
-      {/* ResumeInput calls handleTextSubmit after upload */}
+      {/* ✅ Pass the callback into ResumeInput */}
       <ResumeInput onTextSubmit={handleTextSubmit} />
       {suggestions && <Suggestions suggestions={suggestions} />}
     </main>

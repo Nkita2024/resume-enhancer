@@ -28,12 +28,7 @@ export async function POST(req: Request) {
     }
 
     const data = await response.json();
-
-    // Hugging Face returns an array of generated text
-    const suggestions =
-      Array.isArray(data) && data[0]?.generated_text
-        ? data[0].generated_text
-        : "No suggestions found.";
+    const suggestions = data[0]?.generated_text || "No suggestions generated.";
 
     return NextResponse.json({ suggestions });
   } catch (err: any) {
