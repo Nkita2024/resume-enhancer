@@ -10,6 +10,7 @@ Built with Next.js 16, Tailwind CSS, and Groq LLaMA‑3 inference API.
 - Secure API key management with .env.local.
 
 🛠️ Tech Stack:-
+
 Frontend (React + Tailwind) → clean UI for uploading or pasting resumes.
 Backend (Next.js API Routes) → PDF text extraction and Groq API calls.
 AI Layer (Groq LLaMA‑3) → generates professional resume suggestions.
