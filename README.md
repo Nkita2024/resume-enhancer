@@ -36,7 +36,7 @@ When you call /api/enhance or /api/upload from the frontend, Next.js runs these 
 
 ⚙️ Setup Instructions 
 1. Clone the Repository :-
-git clone https://github.com/yourusername/resume-enhancer.git
+git clone https://github.com/Nkita2024/resume-enhancer.git
 cd resume-enhancer
 2. Install Dependencies :-
 npm install
