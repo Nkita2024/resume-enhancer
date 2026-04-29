@@ -48,31 +48,6 @@ GROQ_API_KEY=your_actual_groq_api_key_here
 4. Build for Production :-
 npm run build
 
-🧩 Architecture Overview :-
-resume-enhancer/
-├── app/
-│   ├── page.tsx                # Main UI (Frontend)
-│   └── api/
-│       ├── upload/route.ts     # PDF upload & text extraction (Backend)
-│       └── enhance/route.ts    # Groq API call (Backend)
-│
-├── components/
-│   ├── ResumeInput.tsx         # Textarea + file upload + button (Frontend)
-│   └── Suggestions.tsx         # Displays AI feedback (Frontend)
-│
-├── public/                     # Static assets (logos, icons, etc.)
-│
-├── styles/
-│   └── globals.css             # Tailwind base styles
-│
-├── tailwind.config.js          # Tailwind configuration
-├── postcss.config.js           # PostCSS setup for Tailwind
-├── tsconfig.json               # TypeScript configuration
-├── package.json                # Dependencies and scripts
-├── .env.local                  # Environment variables (ignored in Git)
-├── .gitignore                  # Ignore node_modules, .env.local, etc.
-└── README.md                   # Project documentation
-
 🧑‍💻 Git Workflow :-
 1. git add .
 2. git commit -m "commnets"
