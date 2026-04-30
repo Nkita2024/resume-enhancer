@@ -5,7 +5,10 @@ export async function POST(req: Request) {
     const { resume } = await req.json();
 
     if (!resume) {
-      return NextResponse.json({ error: "No resume text provided" }, { status: 400 });
+      return NextResponse.json(
+        { error: "No resume text provided" },
+        { status: 400 }
+      );
     }
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -19,7 +22,21 @@ export async function POST(req: Request) {
         messages: [
           {
             role: "system",
-            content: "You are a professional resume coach. Provide clear, actionable suggestions to improve language, structure, impact, and ATS-friendliness."
+            content: `You are a professional resume coach.
+Return feedback in strict JSON format with this schema:
+{
+  "summary": { "strengths": [], "suggestions": [] },
+  "experience": { "strengths": [], "suggestions": [] },
+  "skills": { "strengths": [], "suggestions": [] },
+  "formatting": { "strengths": [], "suggestions": [] },
+  "ats_friendly": { "strengths": [], "suggestions": [] },
+  "ats_match": { "score": 0, "rating": "", "missing_keywords": [] }
+}
+Ensure:
+- "ats_match.score" is a number (0–100) representing ATS compatibility.
+- "ats_match.rating" is a string like "Poor", "Average", "Good", "Excellent".
+- "ats_match.missing_keywords" is an array of important skills/terms not found in the resume.
+`
           },
           {
             role: "user",
@@ -35,7 +52,14 @@ export async function POST(req: Request) {
     }
 
     const data = await response.json();
-    const suggestions = data.choices?.[0]?.message?.content || "No suggestions returned";
+    const rawContent = data.choices?.[0]?.message?.content || "{}";
+
+    let suggestions;
+    try {
+      suggestions = JSON.parse(rawContent);
+    } catch {
+      suggestions = { error: "Invalid JSON returned from model", raw: rawContent };
+    }
 
     return NextResponse.json({ suggestions });
   } catch (err: any) {
