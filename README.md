@@ -73,6 +73,4 @@ When you call /api/enhance or /api/upload from the frontend, Next.js runs these 
 finally run
 npm run build & npm run start
 then you can assecc it from your instance public ip address .
-
--------------
 For this project you can assecc it in your browser by  airesumeenhancer.duckdns.org
